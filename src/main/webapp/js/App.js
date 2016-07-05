@@ -1,3 +1,13 @@
 import React from 'react'
 
-export default function App() {return <div>lolz</div>}
+const App = () => (
+  <div className="container-fluid">
+    <div className="row">
+      <div className="col-xs-12">
+        <h1>Sixteen Days</h1>
+      </div>
+    </div>
+  </div>
+)
+
+export default App
