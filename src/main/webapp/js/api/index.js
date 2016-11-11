@@ -36,6 +36,6 @@ export const fetchArticles = (pageNumber, pageSize) => {
   const first = (pageNumber - 1) * pageSize
   const last = pageNumber * pageSize
 
-  delay(500)
+  return delay(5000)
     .then(() => articles.slice(first, last))
 }

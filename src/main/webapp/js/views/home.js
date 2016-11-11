@@ -1,27 +1,44 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Article from './article'
+import LoadingArticle from './loading-article'
+import * as actions from '../actions'
 
-const mapStateToProps = ({articles}) => ({
-  articles
+const mapStateToProps = ({articles, isFetching}) => ({
+  articles,
+  isFetching
 })
 
+class Home extends Component {
+  componentDidMount() {
+    this.fetchArticles()
+    console.log("I HAZ MOUNTED")
+  }
 
-const Home = ({articles}) => {
-  console.log("home articles", articles)
-  return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-xs-12">
-          <h1>Sixteen Days</h1>
+  fetchArticles() {
+    this.props.fetchArticles()
+  }
+
+  render() {
+    console.log("thisprops", this.props)
+    const {articles, isFetching} = this.props
+    return (
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-xs-12">
+            <h1>Sixteen Days</h1>
+          </div>
         </div>
-      </div>
-      { articles.map(article =>
+        { articles.map(article =>
           <Article key={article.id} article={article}/>
         )
-      }
-    </div>
-  )
+        }
+        {
+          isFetching ? <LoadingArticle/> : ""
+        }
+      </div>
+    )
+  }
 }
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps, actions)(Home)
