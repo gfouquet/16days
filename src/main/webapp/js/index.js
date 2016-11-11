@@ -1,15 +1,9 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {Provider} from 'react-redux'
-import {Router, Route, browserHistory} from 'react-router'
-import App from './App'
+import configureStore from './store'
+import Root from 'views/root'
 
+const store = configureStore()
+console.log("store", store)
 
-render(
-  <Provider>
-    <Router history={browserHistory}>
-      <Route path="/" component={App}/>
-    </Router>
-  </Provider>,
-  document.getElementById('app')
-)
+render(<Root store={store} />, document.getElementById('app'))
