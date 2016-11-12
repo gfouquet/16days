@@ -1,4 +1,4 @@
-import { v4 } from 'node-uuid'
+import {v4} from 'node-uuid'
 
 export const articles = [
   {
@@ -32,10 +32,58 @@ export const articles = [
 const delay = (ms) =>
   new Promise(resolve => setTimeout(resolve, ms))
 
+const fetchContent = (contentCount) =>
+  fetch(`https://baconipsum.com/api/?type=meat-and-filler&paras=${contentCount}`)
+    .then(resp => resp.json())
+
+const fetchTitle = (promise) =>
+  promise
+    .then(() => fetch("https://baconipsum.com/api/?type=meat-and-filler&sentences=1"))
+    .then(resp => resp.json())
+
+const fetchTitles = (fetchContent, titlesCount) => {
+  const recurse = (promises, count) => {
+    if (count == 0) return promises
+    else {
+      const [head, ] = promises
+      return recurse([fetchTitle(head), ...promises], count - 1)
+    }
+  }
+  const [, ...res]  = recurse([fetchContent], titlesCount).reverse()
+  return res
+}
+
 export const fetchArticles = (pageNumber, pageSize) => {
   const first = (pageNumber - 1) * pageSize
   const last = pageNumber * pageSize
 
-  return delay(5000)
-    .then(() => articles.slice(first, last))
+  const missing = last - articles.length
+
+  console.log("missing", missing)
+
+  if (missing > 0) {
+    const contentPromise = fetchContent(missing)
+    const titlesPromises = fetchTitles(contentPromise, missing)
+
+    return Promise.all([contentPromise, ...titlesPromises])
+      .then(([contents, ...titles]) => {
+        console.log("spreading", arguments, "lol")
+
+        contents
+          .map(content => ({content}))
+          .map((art, dx) => ({
+            ...art,
+            title: titles[dx]
+          }))
+          .map(art => ({
+            ...art,
+            id: v4(),
+            published: new Date().toISOString()
+          }))
+          .forEach(art => articles.push(art))
+      }, (err) => console.log("error", err))
+      .then(() => articles.slice(first, last))
+  }
+
+  return new Promise(r => r()).then(() => articles.slice(first, last))
 }

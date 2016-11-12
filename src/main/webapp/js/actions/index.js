@@ -7,7 +7,7 @@ export const fetchArticles = () => (dispatch, getState) => {
     type: 'FETCH_ARTICLES_REQUEST',
   })
 
-  return api.fetchArticles(1, 2).then(
+  return api.fetchArticles(1, 10).then(
     response => dispatch({
       type: 'FETCH_ARTICLES_SUCCESS',
       response: response
