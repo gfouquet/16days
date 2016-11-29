@@ -1,30 +1,11 @@
 import {combineReducers} from 'redux'
+import articles from './articles'
+import isFetching from './is-fetching'
+import articlesCount from './articles-count'
 
-export const initialState = {
-  articles: [],
-  isFetching: false
-}
-
-const sixteenDays = combineReducers({articles, isFetching})
+const sixteenDays = combineReducers({articles, isFetching, articlesCount})
 export default sixteenDays
 
-function articles(state = initialState.articles, action) {
-  switch (action.type) {
-    case 'FETCH_ARTICLES_SUCCESS':
-      return action.response
-    default:
-      return state
-  }
-}
-
-function isFetching(state = initialState.isFetching, action) {
-  switch (action.type) {
-    case 'FETCH_ARTICLES_REQUEST':
-      return true
-    case 'FETCH_ARTICLES_SUCCESS':
-    case 'FETCH_ARTICLES_FAILURE':
-      return false
-    default:
-      return state
-  }
+export function hasMoreArticles(state) {
+  return state.articlesCount == -1 || state.articles.length < state.articlesCount
 }

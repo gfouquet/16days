@@ -87,3 +87,7 @@ export const fetchArticles = (pageNumber, pageSize) => {
 
   return new Promise(r => r()).then(() => articles.slice(first, last))
 }
+
+export const fetchArticlesCount = () => {
+  return delay(1000).then(() => ({articlesCount: 30}))
+}

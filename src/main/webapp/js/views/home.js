@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import * as actions from '../actions'
 import Article from './article'
 import LoadingArticle from './loading-article'
-import * as actions from '../actions'
+import LoadMore from './load-more'
 
 const mapStateToProps = ({articles, isFetching}) => ({
   articles,
@@ -16,7 +17,8 @@ class Home extends Component {
   }
 
   fetchArticles() {
-    this.props.fetchArticles()
+    this.props.fetchArticlesCount()
+      .then(this.props.fetchArticles)
   }
 
   render() {
@@ -33,9 +35,8 @@ class Home extends Component {
           <Article key={article.id} article={article}/>
         )
         }
-        {
-          isFetching ? <LoadingArticle/> : ""
-        }
+        <LoadingArticle isFetching={isFetching}/>
+        <LoadMore />
       </div>
     )
   }
